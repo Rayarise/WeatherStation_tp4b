@@ -32,12 +32,16 @@ namespace WeatherApp.ViewModels
         {
             /// TODO 04 : Les tâches manquantes sont dans les XAML.
             /// TODO 04a : Sauvegarder la configuration
+            ///
+            Properties.Settings.Default.apiKey = ApiKey;
+            Properties.Settings.Default.Save();
+
         }
 
         private string GetApiKey()
         {
             /// TODO 05 : Retourner la configuration
-            return string.Empty;
+            return Properties.Settings.Default.apiKey;
         }
 
     }

@@ -74,19 +74,37 @@ namespace OpenWeatherAPI
             EndPoint = $"/weather?";
 
             /// Src : https://stackoverflow.com/a/14517976/503842
-            var uriBuilder = new UriBuilder($"{BaseURL}{EndPoint}");
+            /// 
+            try
+            {
+                var uriBuilder = new UriBuilder($"{BaseURL}{EndPoint}");
 
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query["q"] = City; // Shawinigan
-            query["units"] = "metric";
-            query["appid"] = ApiKey;
+                var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                query["q"] = City; // Shawinigan
+                query["units"] = "metric";
+                query["appid"] = ApiKey;
 
-            uriBuilder.Query = query.ToString();
-            longUrl = uriBuilder.ToString();
+                uriBuilder.Query = query.ToString();
+                longUrl = uriBuilder.ToString();
 
-            return await doCurrentWeatherCall();
+                return await doCurrentWeatherCall();
+            }
+            catch(NullReferenceException)
+            {
+                var uriBuilder = new UriBuilder($"{BaseURL}{EndPoint}");
+
+                var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                query["q"] = "Shawinigan";
+                query["units"] = "metric";
+                query["appid"] = ApiKey;
+
+                uriBuilder.Query = query.ToString();
+                longUrl = uriBuilder.ToString();
+
+                return await doCurrentWeatherCall();
+            }
         }
-
+       
         private async Task<OpenWeatherOneCallModel> doOneCall()
         {
 
@@ -111,8 +129,13 @@ namespace OpenWeatherAPI
                     OWCurrentWeaterModel result = await response.Content.ReadAsAsync<OWCurrentWeaterModel>();
                     return result;
                 }
+                else
+                {
 
-                return null;
+                    return null;
+                }
+
+                
 
             }
         }

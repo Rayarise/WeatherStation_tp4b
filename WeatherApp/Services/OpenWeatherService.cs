@@ -21,13 +21,19 @@ namespace WeatherApp.Services
         {
             var temp = await owp.GetCurrentWeatherAsync();
 
-            var result = new TemperatureModel
+            if (temp != null)
             {
-                DateTime = DateTime.UnixEpoch.AddSeconds(temp.DateTime),
-                Temperature = temp.Main.Temperature
-            };
+                var result = new TemperatureModel
+                {
+                    DateTime = DateTime.UnixEpoch.AddSeconds(temp.DateTime),
+                    Temperature = temp.Main.Temperature
+                };
 
-            return result;
+                return result;
+            }
+            return null;
+            
+           
         }
 
         public void SetLocation(string location)

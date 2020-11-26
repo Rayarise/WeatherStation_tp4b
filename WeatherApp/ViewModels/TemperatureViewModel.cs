@@ -75,8 +75,15 @@ namespace WeatherApp.ViewModels
         /// <returns></returns>
         public bool CanGetTemp(string obj)
         {
-            
-            return TemperatureService != null;
+            if (Properties.Settings.Default.apiKey != null)
+            {
+                return TemperatureService != null;
+
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void GetTemp(string obj)
@@ -90,7 +97,10 @@ namespace WeatherApp.ViewModels
         {
             CurrentTemp = await TemperatureService.GetTempAsync();
 
-            RawText = $"Time : {CurrentTemp.DateTime.ToLocalTime()} {Environment.NewLine}Temperature : {CurrentTemp.Temperature}";
+            if (CurrentTemp != null)
+            {
+                RawText = $"Time : {CurrentTemp.DateTime.ToLocalTime()} {Environment.NewLine}Temperature : {CurrentTemp.Temperature}";
+            }
         }
 
         public double CelsiusInFahrenheit(double c)
